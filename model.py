@@ -16,10 +16,10 @@ class traction_model :
         # if needed, we can change them from the main
         # essentially, these values chosen are representative of a toy car
 
-        self.J = 0.0001 #inertial load, Nm
-        self.b = 0.00000397 #viscosity in system
+        self.J = 1 #inertial load, Nm
+        self.b = 0.5 #viscosity in system
         self.r_w = 0.032 # tire radius, m
-        self.m = 0.5 #mass of wheel, kg
+        self.m = 1 #mass of wheel, kg
         self.L = 0.003 # inductace f DC motor, H
         self.R = 0.141 # armature resistor, ohms
         self.km = 0.00574 #motor constant
@@ -34,12 +34,25 @@ class traction_model :
         self.road_condition_status = 1 # initialize to dry conditions
         self.td = 0 #disturbance
 
+        # the following are arrays that store information to get printed out later, just need them to be created in the constructor
+        self.current = []
+        self.slip = []
+        self.forward_velocity = []
+        self.angular_velocity_of_tire = []
+        self.friction_coefficient = []
+
         pass
 
     # here is a function for calculating slip
     def calculate_slip(self):
-        self.S = (self.w * self.r_w - self.v)/abs(self.v)
-
+        tol = 0.0000000001
+        self.S = (self.w * self.r_w - self.v)/abs(self.v + tol)
+        #a tolerance is added so that there is no division by 0
+        #now if the calculate slip is huge we should just set to 10
+        if(self.S>10):
+            self.S = 10
+        elif(self.S<-10):
+            self.S = -10
 
     def calculate_friction_factor(self):
         if(self.road_condition_status == 1): #dry
@@ -71,17 +84,37 @@ class traction_model :
         pass
 
     def calculate_new_state(self):
+        dt = 0.001
         didt = (-self.i * self.R - self.kb * self.w + self.Voltage)/self.L
         dwdt = (1/self.J)*(self.km*self.i - self.td - self.b * self.w - self.r_w * self.m * 9.81 * self.mu)
         dvdt = 9.81 * self.mu
 
-        self.i = self.i + didt
-        self.w = self.w + dwdt
-        self.v = self.v + dvdt
+        self.i = self.i + didt*dt
+        self.w = self.w + dwdt*dt
+        self.v = self.v + dvdt*dt
 
         pass
 
+    def iterate(self, v):
+        #step 1: get the voltage from the controller
+        self.Voltage = v
+        #step 2: calculate the slip
+        self.calculate_slip()
+        #step 3: calculate the coeffient of friction
+        self.calculate_friction_factor()
+        #step 4: calculate the new state
+        self.calculate_new_state()
+        #step 5: save the info into the arrays
+        self.save_values()
     #this function is used to save the important values for plotting
-    def save_state_values(self):
-        current
+    def save_values(self):
+        # here are some values that we may want to plot at the end
+        self.current.append(self.i)
+        self.angular_velocity_of_tire.append(self.w)
+        self.forward_velocity.append(self.v)
+        self.friction_coefficient.append(self.mu)
+        self.slip.append(self.S)
+
+
+
 

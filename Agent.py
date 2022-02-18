@@ -1,6 +1,5 @@
-import TestController
+import controller
 import FACL
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 # Maybe this class should have been named Agent but anyways, it exists so that we can plug a low level controller (FACL or FQL) into the agent
@@ -36,25 +35,11 @@ class Agent:
 
 
     def print_path(self): # this function prints the path of the agent taken
-        x=[0]*(len(self.controller.path)-1)
-        y=[0]*(len(self.controller.path)-1)
-        print(len(self.controller.path))
-        for i in range(len(self.controller.path)-1):
-            x[i] = self.controller.path[i][0]
-            y[i] = self.controller.path[i][1]
-        #plt.clf()
-        fig, ax = plt.subplots()
-        ax.plot(x,y)
-        #add circle
-        circle = plt.Circle((self.controller.territory_coordinates[0], self.controller.territory_coordinates[1]), self.controller.r, color='g', fill=False)
-        plt.plot(self.controller.territory_coordinates[0], self.controller.territory_coordinates[1], 'ro')
-        ax.add_patch(circle)
-        plt.show()
+
         pass
 
     def reward_sum_for_a_single_epoch(self):
         total_rewards = sum(self.controller.reward_track)
-        #print(total_rewards)
         return total_rewards
 
     def print_reward_graph(self):
