@@ -7,10 +7,9 @@ import numpy as np
 class Agent:
     def __init__(self, controller):
         # default values
-        self.training_iterations_max = 45 # number of iteration in 1 epoch
+        self.training_iterations_max = 700 # number of milliseconds in a training/simulation episode
         self.controller = controller # this is the controller (FACL or FQL) that gets passed into the actor object
         self.success = 0 # this will count the number of sucesses (to be taken out later)
-        self.figure_number =1
         self.reward_total = []
 
     def run_one_epoch(self): # runs a single epoch of training
@@ -19,11 +18,11 @@ class Agent:
         # This function calls the controller iterator
         for i in range(self.training_iterations_max):
             self.controller.iterate()
-            if (self.controller.distance_from_target() < 1): ##change to a check capture / completion function later
-                self.success +=1
-                #print('success -- end')
-                break
-        self.controller.updates_after_an_epoch()
+            #if (): #need to define a stop case, maybe if the car is able to keep the slip close to 0 for 5 seconds end training early?
+            #    self.success +=1
+            #    #print('success -- end')
+            #    break
+        self.controller.updates_after_an_epoch() # decrease learning / increase exploitation
         self.reward_total.append(self.reward_sum_for_a_single_epoch())
 
         #print(self.controller.path)

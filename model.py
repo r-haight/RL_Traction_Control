@@ -16,8 +16,8 @@ class traction_model :
         # if needed, we can change them from the main
         # essentially, these values chosen are representative of a toy car
 
-        self.J = 1 #inertial load, Nm
-        self.b = 0.5 #viscosity in system
+        self.J = 0.0001 #inertial load, Nm
+        self.b = 0.00000397 #viscosity in system
         self.r_w = 0.032 # tire radius, m
         self.m = 1 #mass of wheel, kg
         self.L = 0.003 # inductace f DC motor, H

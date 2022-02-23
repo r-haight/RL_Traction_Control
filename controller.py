@@ -1,36 +1,31 @@
 import numpy as np
 import FACL as FACL
 import model
-class TestController(FACL):
+class FACLController(FACL):
 
-    def __init__(self, state, max, min, num_mf):
+    def __init__(self, state, max, min, num_mf, model_object):
         self.state = state
-        self.r = 1 #radius of the territory
         self.reward_track =[] # to keep track of the rewards
         FACL.__init__(self, max, min, num_mf) #explicit call to the base class constructor
-        model.traction_model.__init__(state)
-
+        self.initial_state = state
+        self.tire_model = model_object
     def get_reward(self):
-        r = 0
+        r = 0 #(desired - actual_now) - (desired - actual_last_iteration ?)
         self.update_reward_graph(r)
         return r
 
     def update_state(self):
-        self.state[0] = self.state[0] + self.v * np.cos(self.u_t)
-        self.state[1] = self.state[1] + self.v * np.sin(self.u_t)
-        self.update_path(self.state)
+        v = self.u_t # output of the FIS is the voltage to apply to the DC motor
+        self.tire_model.iterate(v)
         pass
 
     def reset(self):
         # Edited for each controller
-        self.state = [5,5] # set to self.initial_state, debug later???
+        self.state = self.initial_state # set to self.initial_state, debug later??? [1,1,0]
         self.reward_track = []
-        self.distance_away_from_target_t = self.distance_from_target()
+
         pass
 
-    def update_path(self, state):
-        self.path = np.vstack([self.path, state])
-        pass
 
     def update_reward_graph(self, r):
         self.reward_track.append(r)

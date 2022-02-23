@@ -1,16 +1,18 @@
-# This is a sample Python script.
+# Main driver for testing the adaptive control and reinforcement learning
+######## NOT COMPLETED AT ALL ###########
+import model #the tire traction & DC motor model
+import FACL #class that implements fuzzy actor critic learning
+import controller #the official controller class that interacts with the agent
+import Agent
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+#state = current in amps, angular velocity, forward velocity
+initial_state = [0,0,0]
+state_max = [50,10,10]
+state_min = [0,-10,-10 ]
+num_of_membership_functions = [10, 10, 10]
 
+#Create the model object
+motor_and_tyre = model.traction_model.__init__(initial_state)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('rachel')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+#Pass the model object into a new controller object
+controller.FACLController.__init__(initial_state, )
