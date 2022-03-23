@@ -7,7 +7,7 @@ import numpy as np
 class Agent:
     def __init__(self, controller):
         # default values
-        self.training_iterations_max = 700 # number of milliseconds in a training/simulation episode
+        self.training_iterations_max = 1000 # number of milliseconds in a training/simulation episode
         self.controller = controller # this is the controller (FACL or FQL) that gets passed into the actor object
         self.success = 0 # this will count the number of sucesses (to be taken out later)
         self.reward_total = []
@@ -26,6 +26,9 @@ class Agent:
         self.reward_total.append(self.reward_sum_for_a_single_epoch())
 
         #print(self.controller.path)
+    def end_of_epoch(self):
+        self.controller.updates_after_an_epoch()
+        self.reward_total.append(self.reward_sum_for_a_single_epoch())
 
     def save_epoch_training_info(self):
         # finish later

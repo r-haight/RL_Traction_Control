@@ -115,6 +115,13 @@ class traction_model :
         self.friction_coefficient.append(self.mu)
         self.slip.append(self.S)
 
+    def reset_model(self):
+        self.current=[]
+        self.angular_velocity_of_tire=[]
+        self.forward_velocity=[]
+        self.friction_coefficient=[]
+        self.slip=[]
+
 
 
 

@@ -1,28 +1,35 @@
 import numpy as np
-import FACL as FACL
+from FACL import FACL
 import model
-class FACLController(FACL):
+class controller(FACL):
 
     def __init__(self, state, max, min, num_mf, model_object):
-        self.state = state
+        self.state = state.copy()
         self.reward_track =[] # to keep track of the rewards
-        FACL.__init__(self, max, min, num_mf) #explicit call to the base class constructor
-        self.initial_state = state
         self.tire_model = model_object
+        FACL.__init__(self, max, min, num_mf) #explicit call to the base class constructor
+        self.initial_state = state.copy()
+
     def get_reward(self):
-        r = 0 #(desired - actual_now) - (desired - actual_last_iteration ?)
+        # print(self.tire_model.S)
+        error = 0.0-(self.tire_model.slip[0])
+        if self.tire_model.S>=1 or self.tire_model.S<=-1: #(desired - actual_now) - (desired - actual_last_iteration ?)
+            r = 6*np.exp(-(error/0.5)**2)-3
+        else:
+            r=0
         self.update_reward_graph(r)
         return r
 
     def update_state(self):
-        v = self.u_t # output of the FIS is the voltage to apply to the DC motor
-        self.tire_model.iterate(v)
+        u = self.u_t # output of the FIS is the voltage to apply to the DC motor
+        self.tire_model.iterate(u)
         pass
 
     def reset(self):
         # Edited for each controller
-        self.state = self.initial_state # set to self.initial_state, debug later??? [1,1,0]
+        self.state = self.initial_state.copy() #
         self.reward_track = []
+        self.tire_model.reset_model()
 
         pass
 
