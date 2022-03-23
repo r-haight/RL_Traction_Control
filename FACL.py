@@ -206,6 +206,7 @@ class FACL:
         self.v_t_1 = self.calculate_vt(self.phi_next) # self.phi[l] * self.zeta[l]
         #print('v_t_1')
         #print(self.v_t_1)
+
         # Step 8: calculate the temporal difference
         self.calculate_prediction_error()
         #print('temporal_difference')
