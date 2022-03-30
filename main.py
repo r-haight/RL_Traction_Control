@@ -16,7 +16,7 @@ initial_state = [i_initial,w_initial,v_initial]
 state_max = [50,10,10]
 state_min = [-50,-10,-10 ]
 num_of_membership_functions = [9, 9, 9]
-action_list = [1,3.3,5,12]
+action_list = [0,1,3.3,5]
 
 number_of_epochs = 10
 
@@ -25,7 +25,7 @@ motor_and_tyre = model.traction_model(initial_state)
 
 # Select which type of RL we use
 #1 = FACL and 2 = FQL
-selection = 1
+selection = 2
 
 if selection ==1:
     # Pass the model object into a new controller object
@@ -34,11 +34,14 @@ elif selection == 2:
     Traction_Controller = fql_controller(initial_state, state_max, state_min, num_of_membership_functions,
                                          motor_and_tyre, action_list)
 
-# Agent object we interact with
+#Agent object we interact with
 learning_agent = Agent(Traction_Controller)
 
-#Training
-for i in range(10):
+
+## Training Loop
+
+for i in range(25):
+    print("epoch: ", i)
     learning_agent.controller.reset()
     for j in range(learning_agent.training_iterations_max):
         #### At this point we need to make a simulation scenario
@@ -49,8 +52,7 @@ for i in range(10):
 
         # End the epoch condition?
     learning_agent.end_of_epoch()
-
-# Print the some of the more important plots
+# Print the path that our agent took in her last epoch
 fig, ax = plt.subplots()
 ax.plot(learning_agent.controller.tire_model.slip)
 plt.title("Slip")
@@ -61,10 +63,15 @@ ax.plot(learning_agent.controller.tire_model.forward_velocity)
 plt.title("Forward Velocity")
 plt.show()
 
-learning_agent.print_reward_graph()
-
 
 fig, ax = plt.subplots()
-ax.plot(learning_agent.controller.voltage_input)
-plt.title("Learned Voltage Input vs Time")
+ax.plot(learning_agent.controller.tire_model.angular_velocity_of_tire)
+plt.title("Angular Velocity")
 plt.show()
+
+fig, ax = plt.subplots()
+ax.plot(learning_agent.controller.tire_model.voltage_input)
+plt.title("Voltage Input")
+plt.show()
+
+learning_agent.print_reward_graph()

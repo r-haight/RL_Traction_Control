@@ -11,17 +11,38 @@ class controller(FACL):
         self.initial_state = state.copy()
         self.voltage_input = [] # to keep track of what voltage is used at what time
 
+        # The goal is to ensure traction but also to keep wheel going within the following speed limits
+        # lower = 100 rpm -> 10.5 rad/s
+        # upper = 150 rpm -> 15.71 rad/s
+        self.upper_angular_vel_limit = 160
+        self.lower_angular_vel_limit = 10.5
+
     def get_reward(self):
-        # print(self.tire_model.S)
-        error = 0.0-(self.tire_model.slip[0])
+
+        # use the measured slip to get the current slip error
+        error_slip = 0.0-(self.tire_model.S)
+        # make the speed error based on the range of acceptable speeds
+        error_speed = 0.0
+
+        error_speed = self.upper_angular_vel_limit - self.tire_model.w
+
+
+        # reward calulation for angular vel and slip
+        r_w = 6 * np.exp(-(error_speed / 0.5) ** 2) - 3
+
         if self.tire_model.S>=1 or self.tire_model.S<=-1: #(desired - actual_now) - (desired - actual_last_iteration ?)
-            r = 6*np.exp(-(error/0.5)**2)-3
+            r_s = 6*np.exp(-(error_slip/0.5)**2)-3
         else:
-            r=0
+            r_s=0
+
+        # speed is half as important as slip
+        r = r_s + r_w
         self.update_reward_graph(r)
         return r
 
     def update_state(self):
+        if self.u_t<0:
+            self.u_t = 0
         u = self.u_t # output of the FIS is the voltage to apply to the DC motor
         self.voltage_input.append(u)
         self.tire_model.iterate(u)

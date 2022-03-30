@@ -29,6 +29,7 @@ class Agent:
     def end_of_epoch(self):
         self.controller.updates_after_an_epoch()
         self.reward_total.append(self.reward_sum_for_a_single_epoch())
+        self.controller.reward_track = []
 
     def save_epoch_training_info(self):
         # finish later

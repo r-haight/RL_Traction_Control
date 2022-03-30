@@ -18,7 +18,7 @@ class traction_model :
 
         self.J = 0.0001 #inertial load, Nm
         self.b = 0.00000397 #viscosity in system
-        self.r_w = 0.032 # tire radius, m
+        self.r_w = 0.05 #0.032 # tire radius, m
         self.m = 1 #mass of wheel, kg
         self.L = 0.003 # inductace f DC motor, H
         self.R = 0.141 # armature resistor, ohms
@@ -40,6 +40,7 @@ class traction_model :
         self.forward_velocity = []
         self.angular_velocity_of_tire = []
         self.friction_coefficient = []
+        self.voltage_input = []
 
         pass
 
@@ -114,6 +115,7 @@ class traction_model :
         self.forward_velocity.append(self.v)
         self.friction_coefficient.append(self.mu)
         self.slip.append(self.S)
+        self.voltage_input.append(self.Voltage)
 
     def reset_model(self):
         self.current=[]
@@ -121,6 +123,7 @@ class traction_model :
         self.forward_velocity=[]
         self.friction_coefficient=[]
         self.slip=[]
+        self.voltage_input = []
 
 
 
