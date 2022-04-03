@@ -16,9 +16,9 @@ initial_state = [i_initial,w_initial,v_initial]
 state_max = [50,10,10]
 state_min = [-50,-10,-10 ]
 num_of_membership_functions = [9, 9, 9]
-action_list = [0,1,3.3,5]
+action_list = [0,3.3,5]
 
-number_of_epochs = 10
+number_of_epochs = 20
 
 #Create the model object
 motor_and_tyre = model.traction_model(initial_state)
@@ -40,14 +40,16 @@ learning_agent = Agent(Traction_Controller)
 
 ## Training Loop
 
-for i in range(25):
+for i in range(number_of_epochs):
     print("epoch: ", i)
     learning_agent.controller.reset()
     for j in range(learning_agent.training_iterations_max):
         #### At this point we need to make a simulation scenario
         #### We'll do dry road until 400, and then at 400 it needs to learn to enable traction
-        if(j==400):
+        if(j==300):
             learning_agent.controller.tire_model.road_condition_status = 4
+        elif j ==500:
+            learning_agent.controller.tire_model.road_condition_status = 2
         learning_agent.controller.iterate()
 
         # End the epoch condition?
@@ -56,22 +58,30 @@ for i in range(25):
 fig, ax = plt.subplots()
 ax.plot(learning_agent.controller.tire_model.slip)
 plt.title("Slip")
+plt.xlabel('time - ms')
+plt.ylabel('slip ratio')
 plt.show()
 
 fig, ax = plt.subplots()
 ax.plot(learning_agent.controller.tire_model.forward_velocity)
 plt.title("Forward Velocity")
+plt.xlabel('time - ms')
+plt.ylabel('forward velocity - m/s')
 plt.show()
 
 
 fig, ax = plt.subplots()
 ax.plot(learning_agent.controller.tire_model.angular_velocity_of_tire)
 plt.title("Angular Velocity")
+plt.xlabel('time - ms')
+plt.ylabel('angular velocity  - rad/s')
 plt.show()
 
 fig, ax = plt.subplots()
 ax.plot(learning_agent.controller.tire_model.voltage_input)
 plt.title("Voltage Input")
+plt.xlabel('time - ms')
+plt.ylabel('voltage - V')
 plt.show()
 
 learning_agent.print_reward_graph()

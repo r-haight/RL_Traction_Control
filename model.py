@@ -16,14 +16,14 @@ class traction_model :
         # if needed, we can change them from the main
         # essentially, these values chosen are representative of a toy car
 
-        self.J = 0.0001 #inertial load, Nm
+        self.J = 0.001 #inertial load, Nm
         self.b = 0.00000397 #viscosity in system
-        self.r_w = 0.05 #0.032 # tire radius, m
-        self.m = 1 #mass of wheel, kg
+        self.r_w = 0.032 # tire radius, m
+        self.m = 1.136 #mass of wheel, kg
         self.L = 0.003 # inductace f DC motor, H
         self.R = 0.141 # armature resistor, ohms
         self.km = 0.00574 #motor constant
-        self.kb = 0.00574
+        self.kb =  0.00574
 
         #for the purpose of simulation, a road condition flag will be used to calculate the type of friction factor
         #we need to use. this gets changed during simulation to test how the controller responds

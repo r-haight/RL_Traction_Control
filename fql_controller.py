@@ -9,7 +9,7 @@ class fql_controller(FQL):
         self.tire_model = model_object
         FQL.__init__(self, action_list, max, min, num_mf) #explicit call to the base class constructor
         self.initial_state = state.copy()
-        self.angular_vel_limit = 200
+        self.angular_vel_limit = 300
     def get_reward(self):
         # use the measured slip to get the current slip error
         error_slip = 0.0-(self.tire_model.S)
@@ -22,13 +22,13 @@ class fql_controller(FQL):
         # reward calulation for angular vel and slip
         r_w = 6 * np.exp(-(error_speed / 0.5) ** 2) - 3
 
-        if self.tire_model.S>=1 or self.tire_model.S<=-1: #(desired - actual_now) - (desired - actual_last_iteration ?)
+        if self.tire_model.S>1 or self.tire_model.S<-1: #(desired - actual_now) - (desired - actual_last_iteration ?)
             r_s = 6*np.exp(-(error_slip/0.5)**2)-3
         else:
             r_s=0
 
         # speed is half as important as slip
-        r = r_s + 0.2*r_w
+        r = 0.8*r_s + 0.2*r_w
         self.update_reward_graph(r)
         return r
 
