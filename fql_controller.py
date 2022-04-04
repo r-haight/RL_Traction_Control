@@ -9,7 +9,7 @@ class fql_controller(FQL):
         self.tire_model = model_object
         FQL.__init__(self, action_list, max, min, num_mf) #explicit call to the base class constructor
         self.initial_state = state.copy()
-        self.angular_vel_limit = 300
+        self.angular_vel_limit = 400
     def get_reward(self):
         # use the measured slip to get the current slip error
         error_slip = 0.0-(self.tire_model.S)

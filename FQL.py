@@ -3,8 +3,6 @@ import matplotlib as plt
 import abc
 import random
 
-# STILL IN THE WORKS
-# NOT TESTED NOR COMPLETED
 
 class FQL :
     def __init__(self, actions : list, statemax : list, statemin : list, numMF : list):
