@@ -14,6 +14,7 @@ import numpy as np
 i_initial = 0
 w_initial = 0
 v_initial = 0
+## This is used to make the membership functions. The maximum velocity is 20m/s etc
 initial_state = [i_initial,w_initial,v_initial]
 state_max = [100,500,20]
 state_min = [-10,-10,-10]
@@ -46,8 +47,8 @@ for i in range(number_of_epochs):
     print("epoch: ", i)
     learning_agent.controller.reset()
     for j in range(learning_agent.training_iterations_max):
-        #### At this point we need to make a simulation scenario
-        #### We'll do dry road until 400, and then at 400 it needs to learn to enable traction
+        #### At this point we make a simulation scenario
+      
         if(j==300):
             learning_agent.controller.tire_model.road_condition_status = 2
         elif j ==500:
